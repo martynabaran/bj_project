@@ -82,7 +82,7 @@ class BlackjackGame:
         self.player.hand.add_card(self.deck.deal())
         self.player.hand.add_card(self.deck.deal())
         self.dealer.hand.add_card(self.deck.deal())
-        self.dealer.hand.add_card(self.deck.deal())
+        #self.dealer.hand.add_card(self.deck.deal())
 
 
     def hit(self)-> bool:
@@ -111,7 +111,7 @@ class BlackjackGame:
             print('You have busted')
 
         while self.dealer.hand.value() < 17:
-            self.dealer.hand.add_card(self.deck.deal())
+           self.dealer.hand.add_card(self.deck.deal())
 
         if self.dealer.hand.value() > 21 or self.player.hand.value() > self.dealer.hand.value():
             return f"{self.player.name} wins!"
