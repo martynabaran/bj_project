@@ -1,76 +1,125 @@
 import tkinter as tk
 from tkinter import PhotoImage, messagebox
 import random
+cards_values = {"A": 11, "2":2, "3":3, "4":4, "5":5, "6":6, "7":7, "8":8, "9":9, "10":10, "J":10, "Q":10, "K":10}
 
 class Card:
-    def __init__(self, suit: str, value: int):
+    def __init__(self, suit: str, value: str):
         # TODO: Initialize the attributes
-        pass
+        self.suit = suit
+        self.value = value
 
     def get_numeric_value(self) -> int:
         # TODO: Return the numeric value of the card
-        pass
+        return cards_values[self.value]
 
     def get_image(self):
         # TODO: Return the path to the card's image
-        pass
+        return f"img/{self.value}_of_{self.suit}.png"
 
 class Deck:
-    def __init__(self):
+    def __init__(self, suits , values):
         # TODO: Initialize the deck
-        pass
+        self.cards = [Card(suit,value) for suit in suits for value in values ]
+
 
     def shuffle(self):
         # TODO: Shuffle the cards
-        pass
+        random.shuffle(self.cards)
+
 
     def deal(self)-> Card:
         # TODO: Deal one card from the deck
-        pass
+        return self.cards.pop()
+
 
 class EnglishDeck(Deck):
     def __init__(self):
         # TODO: Create a standard deck of 52 cards and shuffle them
-        pass
+        suits = ["spades", "hearts", "clubs", "diamonds"]
+        cards = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
+        super().__init__(suits,cards)
+        self.shuffle()
+
 
 class Hand:
     def __init__(self):
         # TODO: Initialize the hand
-        pass
+        #hand needs to have space for taken cards
+        self.cards = []
+
 
     def add_card(self, card: Card):
         # TODO: Add a card to the hand
-        pass
+        self.cards.append(card)
 
     def value(self)->int:
         # TODO: Return the total value of the hand
-        pass
+        hand_sum = sum(card.get_numeric_value() for card in self.cards)
+        num_of_Ace = sum( 1 for card in self.cards if card.value=='A')
+        while num_of_Ace and hand_sum >21:
+            hand_sum -=10
+            num_of_Ace -= 1
+        return  hand_sum
 
 class Player:
     def __init__(self, name):
         # TODO: Initialize the player's attributes
-        pass
+        self.name = name
+        self.hand = Hand()
 
 class BlackjackGame:
     def __init__(self):
         # TODO: Initialize the game's attributes
-        pass
+        self.deck = EnglishDeck()
+        self.player = Player('PLAYER')
+        self.dealer = Player('DEALER')
+
 
     def start_game(self):
         # TODO: Start a new game and deal two cards to each player
-        pass
+
+        self.player.hand.add_card(self.deck.deal())
+        self.player.hand.add_card(self.deck.deal())
+        self.dealer.hand.add_card(self.deck.deal())
+        self.dealer.hand.add_card(self.deck.deal())
+
 
     def hit(self)-> bool:
         # TODO: Add a card to the player's hand
-        pass
+
+        self.player.hand.add_card(self.deck.deal())
+        return self.player.hand.value() > 21
+
+
+
 
     def dealer_hit(self) -> bool:
         # TODO: Deal cards to the dealer based on blackjack's standard rules
-        pass
+
+        if self.dealer.hand.value() < 17:
+            self.dealer.hand.add_card(self.deck.deal())
+            return False
+        return True
+
+
 
     def determine_winner(self):
         # TODO: Determine and return the winner of the game
-        pass
+
+        if self.player.hand.value() > 21:
+            print('You have busted')
+
+        while self.dealer.hand.value() < 17:
+            self.dealer.hand.add_card(self.deck.deal())
+
+        if self.dealer.hand.value() > 21 or self.player.hand.value() > self.dealer.hand.value():
+            return f"{self.player.name} wins!"
+        elif self.dealer.hand.value() > self.player.hand.value():
+            return "The house wins."
+        else:
+            return "It's a tie!"
+
 
 # The GUI code is provided, so students don't need to modify it
 class BlackjackGUI:
