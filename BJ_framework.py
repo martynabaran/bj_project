@@ -38,7 +38,7 @@ class EnglishDeck(Deck):
         # TODO: Create a standard deck of 52 cards and shuffle them
         suits = ["spades", "hearts", "clubs", "diamonds"]
         cards = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
-        super().__init__(suits,cards)
+        super().__init__(suits, cards)
         self.shuffle()
 
 
@@ -56,11 +56,11 @@ class Hand:
     def value(self)->int:
         # TODO: Return the total value of the hand
         hand_sum = sum(card.get_numeric_value() for card in self.cards)
-        num_of_Ace = sum( 1 for card in self.cards if card.value=='A')
-        while num_of_Ace and hand_sum >21:
-            hand_sum -=10
+        num_of_Ace = sum(1 for card in self.cards if card.value == 'A')
+        while num_of_Ace and hand_sum > 21:
+            hand_sum -= 10
             num_of_Ace -= 1
-        return  hand_sum
+        return hand_sum
 
 class Player:
     def __init__(self, name):
